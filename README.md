@@ -1,8 +1,8 @@
 # Produtos API
 
-API REST para cadastro de produtos com Spring Boot 2.
+API REST para gerenciamento de produtos com Spring Boot 2, autenticacao JWT e documentacao Swagger.
 
-## Stack
+## Tecnologias
 
 - Java 17
 - Spring Boot 2.7.18
@@ -10,28 +10,47 @@ API REST para cadastro de produtos com Spring Boot 2.
 - Spring Data JPA
 - Spring Security
 - H2 Database
+- JWT (jjwt)
+- Swagger/OpenAPI (springdoc)
 - Maven
 
-## Estrategia de branches
+## Requisitos atendidos
 
-- `main`: branch de release
-- `develop`: branch de integracao
-- `fase/03-dtos-mapeamento`: branch de implementacao da fase atual
+- CRUD completo de produtos:
+  - `POST /api/produtos`
+  - `GET /api/produtos`
+  - `GET /api/produtos/{id}`
+  - `PUT /api/produtos/{id}`
+  - `DELETE /api/produtos/{id}`
+- Login JWT:
+  - `POST /auth/login`
+- Usuario admin hardcoded:
+  - email: `admin@exemplo.com`
+  - senha: `admin123`
+- Endpoints CRUD protegidos por autenticacao JWT
+- Tratamento de erros padronizado (`404`, `400`, `401`, `403`, `500`)
+- H2 em memoria
+- Swagger com suporte a Bearer Token
 
-Fluxo aplicado:
+## Estrutura de pastas
 
-1. Criar branch de fase a partir de `develop`
-2. Desenvolver e validar localmente
-3. Merge em `develop`
-4. Merge de `develop` em `main`
+- `controller`: endpoints de produtos
+- `service`: regras de negocio
+- `service/exception`: excecoes de dominio da camada de servico
+- `repository`: acesso ao banco
+- `model`: entidades JPA
+- `dto`: DTOs de produtos
+- `auth`: login e DTOs de autenticacao
+- `security`: configuracao de seguranca, JWT e handlers 401/403
+- `exception/handler`: tratamento global de excecoes
+- `exception/payload`: formato padrao de erro da API
+- `config`: configuracoes adicionais (OpenAPI)
 
 ## Perfis
 
-Foram criados perfis para separar ambientes:
-
 - `dev` (default): H2 em memoria, SQL habilitado
 - `test`: H2 em memoria com `create-drop`
-- `prod`: configuracao por variaveis de ambiente (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`)
+- `prod`: variaveis de ambiente para banco, JWT e CORS
 
 Arquivos:
 
@@ -39,38 +58,6 @@ Arquivos:
 - `src/main/resources/application-dev.properties`
 - `src/main/resources/application-test.properties`
 - `src/main/resources/application-prod.properties`
-
-## CI (GitHub Actions)
-
-Workflow: `.github/workflows/ci.yml`
-
-Executa `mvn test` em push/PR para `develop` e `main` (e push em `fase/**`).
-
-## Fase 3 entregue: DTOs e mapeamento
-
-Estrutura implementada:
-
-- `model`: `Produto`
-- `dto`: `ProdutoRequestDTO`, `ProdutoResponseDTO`
-- `mapper`: `ProdutoMapper`
-- `repository`: `ProdutoRepository`
-- `service`: `ProdutoService`
-- `controller`: `ProdutoController`
-- `exception`: `ResourceNotFoundException`, `GlobalExceptionHandler`
-
-Contrato do CRUD:
-
-- Requisicoes usam `ProdutoRequestDTO`
-- Respostas usam `ProdutoResponseDTO`
-- Entidade `Produto` fica interna na camada de dominio/persistencia
-
-Endpoints CRUD:
-
-- `POST /api/produtos`
-- `GET /api/produtos`
-- `GET /api/produtos/{id}`
-- `PUT /api/produtos/{id}`
-- `DELETE /api/produtos/{id}`
 
 ## Como rodar
 
@@ -91,7 +78,68 @@ Executar testes:
 mvn test
 ```
 
-## Proximas fases
+## Swagger
 
-- Fase 4: autenticacao JWT e protecao dos endpoints
-- Fase 5: testes de controller/service e refinamentos finais
+- URL da UI: `http://localhost:8080/swagger-ui/index.html`
+- OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+
+Para testar endpoints protegidos:
+
+1. Chame `POST /auth/login` e copie o token.
+2. No Swagger, clique em `Authorize`.
+3. Informe `Bearer <seu_token>`.
+
+## Exemplos de cURL
+
+Login:
+
+```bash
+curl -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@exemplo.com","senha":"admin123"}'
+```
+
+Criar produto:
+
+```bash
+curl -X POST http://localhost:8080/api/produtos \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_TOKEN" \
+  -d '{"nome":"Notebook","preco":4500.00,"descricao":"Notebook i7","categoria":"Informatica"}'
+```
+
+Listar produtos:
+
+```bash
+curl -X GET http://localhost:8080/api/produtos \
+  -H "Authorization: Bearer SEU_TOKEN"
+```
+
+Buscar por ID:
+
+```bash
+curl -X GET http://localhost:8080/api/produtos/1 \
+  -H "Authorization: Bearer SEU_TOKEN"
+```
+
+Atualizar produto:
+
+```bash
+curl -X PUT http://localhost:8080/api/produtos/1 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_TOKEN" \
+  -d '{"nome":"Notebook Pro","preco":5200.00,"descricao":"Notebook i7 16GB","categoria":"Informatica"}'
+```
+
+Deletar produto:
+
+```bash
+curl -X DELETE http://localhost:8080/api/produtos/1 \
+  -H "Authorization: Bearer SEU_TOKEN"
+```
+
+## CI
+
+Workflow: `.github/workflows/ci.yml`
+
+Executa `mvn test` em push/PR para `develop` e `main`.
