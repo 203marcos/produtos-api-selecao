@@ -16,7 +16,7 @@ API REST para cadastro de produtos com Spring Boot 2.
 
 - `main`: branch de release
 - `develop`: branch de integracao
-- `fase/02-produto-crud`: branch de implementacao da fase atual
+- `fase/03-dtos-mapeamento`: branch de implementacao da fase atual
 
 Fluxo aplicado:
 
@@ -46,23 +46,23 @@ Workflow: `.github/workflows/ci.yml`
 
 Executa `mvn test` em push/PR para `develop` e `main` (e push em `fase/**`).
 
-## Fase 2 entregue: CRUD de Produto
+## Fase 3 entregue: DTOs e mapeamento
 
 Estrutura implementada:
 
 - `model`: `Produto`
+- `dto`: `ProdutoRequestDTO`, `ProdutoResponseDTO`
+- `mapper`: `ProdutoMapper`
 - `repository`: `ProdutoRepository`
 - `service`: `ProdutoService`
 - `controller`: `ProdutoController`
 - `exception`: `ResourceNotFoundException`, `GlobalExceptionHandler`
 
-Campos de `Produto`:
+Contrato do CRUD:
 
-- `id`
-- `nome`
-- `preco`
-- `descricao`
-- `categoria`
+- Requisicoes usam `ProdutoRequestDTO`
+- Respostas usam `ProdutoResponseDTO`
+- Entidade `Produto` fica interna na camada de dominio/persistencia
 
 Endpoints CRUD:
 
@@ -93,6 +93,5 @@ mvn test
 
 ## Proximas fases
 
-- Fase 3: DTOs e mapeamento
 - Fase 4: autenticacao JWT e protecao dos endpoints
 - Fase 5: testes de controller/service e refinamentos finais
