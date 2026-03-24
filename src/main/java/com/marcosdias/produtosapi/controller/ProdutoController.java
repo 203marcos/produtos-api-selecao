@@ -1,6 +1,7 @@
 package com.marcosdias.produtosapi.controller;
 
-import com.marcosdias.produtosapi.model.Produto;
+import com.marcosdias.produtosapi.dto.ProdutoRequestDTO;
+import com.marcosdias.produtosapi.dto.ProdutoResponseDTO;
 import com.marcosdias.produtosapi.service.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,24 +30,25 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Produto> criar(@Valid @RequestBody Produto produto) {
-        Produto criado = produtoService.criar(produto);
+    public ResponseEntity<ProdutoResponseDTO> criar(@Valid @RequestBody ProdutoRequestDTO requestDTO) {
+        ProdutoResponseDTO criado = produtoService.criar(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
 
     @GetMapping
-    public ResponseEntity<List<Produto>> listarTodos() {
+    public ResponseEntity<List<ProdutoResponseDTO>> listarTodos() {
         return ResponseEntity.ok(produtoService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ProdutoResponseDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(produtoService.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizar(@PathVariable Long id, @Valid @RequestBody Produto produto) {
-        return ResponseEntity.ok(produtoService.atualizar(id, produto));
+    public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable Long id,
+                                                        @Valid @RequestBody ProdutoRequestDTO requestDTO) {
+        return ResponseEntity.ok(produtoService.atualizar(id, requestDTO));
     }
 
     @DeleteMapping("/{id}")
@@ -55,4 +57,3 @@ public class ProdutoController {
         return ResponseEntity.noContent().build();
     }
 }
-
