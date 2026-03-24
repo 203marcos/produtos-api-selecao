@@ -1,4 +1,4 @@
-package com.marcosdias.produtosapi.exception;
+package com.marcosdias.produtosapi.service.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 
@@ -6,4 +6,5 @@ public class ResourceNotFoundException extends RuntimeException {
         super(message);
     }
 }
+
 

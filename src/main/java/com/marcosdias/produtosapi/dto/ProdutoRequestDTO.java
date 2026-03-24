@@ -6,6 +6,14 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ProdutoRequestDTO {
+    /*
+        Bom, escolhi utilizar uma classe DTO tradicional em vez de record,
+        pois o projeto utiliza Spring Boot 2 e Java 17, e optei por priorizar abordagem mais comum em projetos reais,
+        garantindo maior clareza e previsibilidade.
+
+        Além disso, evitei usar o Lombok, pra seguir a risca ao que foi pedido no teste,
+        e tambem para deixar o código mais explicito e facil de entender.
+     */
 
     @NotBlank(message = "Nome do produto e obrigatorio")
     private String nome;
