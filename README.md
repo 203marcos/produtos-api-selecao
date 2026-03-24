@@ -34,12 +34,13 @@ API REST para gerenciamento de produtos com Spring Boot 2, autenticacao JWT e do
 
 ## Estrutura de pastas
 
-- `controller`: endpoints de produtos
-- `service`: regras de negocio
-- `service/exception`: excecoes de dominio da camada de servico
-- `repository`: acesso ao banco
-- `model`: entidades JPA
-- `dto`: DTOs de produtos
+- `produto/controller`: endpoints de produtos
+- `produto/service`: regras de negocio de produtos
+- `produto/exception`: excecoes de dominio de produtos
+- `produto/repository`: acesso ao banco de produtos
+- `produto/model`: entidades JPA de produtos
+- `produto/dto`: DTOs de produtos
+- `produto/mapper`: conversao entre DTO e entidade
 - `auth`: login e DTOs de autenticacao
 - `security`: configuracao de seguranca, JWT e handlers 401/403
 - `exception/handler`: tratamento global de excecoes
