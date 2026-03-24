@@ -2,7 +2,7 @@ package com.marcosdias.produtosapi.service;
 
 import com.marcosdias.produtosapi.dto.ProdutoRequestDTO;
 import com.marcosdias.produtosapi.dto.ProdutoResponseDTO;
-import com.marcosdias.produtosapi.exception.ResourceNotFoundException;
+import com.marcosdias.produtosapi.service.exception.ResourceNotFoundException;
 import com.marcosdias.produtosapi.mapper.ProdutoMapper;
 import com.marcosdias.produtosapi.model.Produto;
 import com.marcosdias.produtosapi.repository.ProdutoRepository;
