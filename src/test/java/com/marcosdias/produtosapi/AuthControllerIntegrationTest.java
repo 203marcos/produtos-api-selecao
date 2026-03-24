@@ -19,37 +19,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class AuthControllerIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Test
-    void loginComCredenciaisValidasRetornaToken() throws Exception {
-        AuthLoginRequestDTO request = new AuthLoginRequestDTO();
-        request.setEmail("admin@exemplo.com");
-        request.setSenha("admin123");
+	@Test
+	void loginComCredenciaisValidasRetornaToken() throws Exception {
+		AuthLoginRequestDTO request = new AuthLoginRequestDTO();
+		request.setEmail("admin@exemplo.com");
+		request.setSenha("admin123");
 
-        mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").isNotEmpty())
-                .andExpect(jsonPath("$.tipo").value("Bearer"));
-    }
+		mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk())
+				.andExpect(jsonPath("$.token").isNotEmpty()).andExpect(jsonPath("$.tipo").value("Bearer"));
+	}
 
-    @Test
-    void loginComCredenciaisInvalidasRetorna401() throws Exception {
-        AuthLoginRequestDTO request = new AuthLoginRequestDTO();
-        request.setEmail("admin@exemplo.com");
-        request.setSenha("senhaErrada");
+	@Test
+	void loginComCredenciaisInvalidasRetorna401() throws Exception {
+		AuthLoginRequestDTO request = new AuthLoginRequestDTO();
+		request.setEmail("admin@exemplo.com");
+		request.setSenha("senhaErrada");
 
-        mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.mensagem").value("Email ou senha invalidos"));
-    }
+		mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request))).andExpect(status().isUnauthorized())
+				.andExpect(jsonPath("$.mensagem").value("Email ou senha invalidos"));
+	}
 }
-
