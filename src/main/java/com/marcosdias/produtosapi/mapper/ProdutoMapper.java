@@ -7,6 +7,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProdutoMapper {
+    /*
+         Escolhi também usar um ProdutoMapper para garantir a organização e
+         separação de responsabilidades, evitando acoplamento entre as camadas
+         da aplicação (Controller, Service e Model).
+
+         Dessa forma, a conversão entre DTO e entidade fica centralizada,
+         facilitando a manutenção e possíveis mudanças futuras.
+    */
 
     public Produto toEntity(ProdutoRequestDTO requestDTO) {
         Produto produto = new Produto();
