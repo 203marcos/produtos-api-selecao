@@ -16,6 +16,19 @@ import java.util.Collections;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+	/*
+	 * Implementei um filtro JWT stateless que:
+	 * 
+	 * 1. Extrai o token do header "Authorization: Bearer <token>"
+	 * 2. Valida o token contra a chave secreta
+	 * 3. Extrai o email (subject) do token
+	 * 4. Cria uma autenticação sem dependência de UserDetailsService
+	 * 5. Define a autenticação no SecurityContext para a requisição
+	 * 
+	 * Arquitetura STATELESS: não há sessão no servidor. Cada token contém todas
+	 * as informações necessárias para autenticar a requisição. Isso torna a API
+	 * escalável (não precisa compartilhar sessões entre servidores).
+	 */
 
 	private final JwtTokenService jwtTokenService;
 
