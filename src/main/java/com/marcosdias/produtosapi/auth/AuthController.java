@@ -1,5 +1,7 @@
 package com.marcosdias.produtosapi.auth;
 
+import com.marcosdias.produtosapi.auth.dto.AuthLoginRequestDTO;
+import com.marcosdias.produtosapi.auth.dto.AuthLoginResponseDTO;
 import com.marcosdias.produtosapi.security.JwtTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

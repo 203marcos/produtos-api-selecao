@@ -1,4 +1,4 @@
-package com.marcosdias.produtosapi.auth;
+package com.marcosdias.produtosapi.auth.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -28,3 +28,4 @@ public class AuthLoginRequestDTO {
 		this.senha = senha;
 	}
 }
+

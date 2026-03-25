@@ -15,6 +15,8 @@ import java.util.Date;
 @Service
 public class JwtTokenService {
 
+	private static final int MIN_SECRET_LENGTH = 32;
+
 	@Value("${app.jwt.secret}")
 	private String secret;
 
@@ -25,6 +27,14 @@ public class JwtTokenService {
 
 	@PostConstruct
 	public void init() {
+		if (secret == null || secret.trim().isEmpty()) {
+			throw new IllegalStateException("app.jwt.secret nao pode ser vazio");
+		}
+
+		if (secret.length() < MIN_SECRET_LENGTH) {
+			throw new IllegalStateException("app.jwt.secret deve ter no minimo 32 caracteres");
+		}
+
 		this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	}
 
