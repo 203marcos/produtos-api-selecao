@@ -16,6 +16,18 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	/*
+	 * Utilizei @RestControllerAdvice para centralizar o tratamento de exceções em
+	 * um único lugar. Benefícios:
+	 * 
+	 * 1. DRY (Don't Repeat Yourself): cada tipo de erro é tratado uma única vez
+	 * 2. Consistência: todos os erros retornam no mesmo formato (ApiErrorResponse)
+	 * 3. Manutenção: alterações no tratamento de erros afetam a API inteira
+	 * 4. Separação de responsabilidades: lógica de erro fica fora dos controllers
+	 * 
+	 * Cada @ExceptionHandler mapeia um tipo de exceção para uma resposta HTTP
+	 * apropriada com status e mensagem em PT-BR.
+	 */
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ApiErrorResponse> handleResourceNotFound(ResourceNotFoundException ex,

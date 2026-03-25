@@ -24,6 +24,14 @@ import java.util.List;
 @Validated
 @PreAuthorize("isAuthenticated()")
 public class ProdutoController {
+	/*
+	 * Utilizei @PreAuthorize("isAuthenticated()") na classe para proteger TODOS os
+	 * endpoints dessa classe. Qualquer requisição sem um token JWT válido retornará
+	 * 401 (Unauthorized).
+	 * 
+	 * Dessa forma, a segurança é garantida de forma declarativa, sem necessidade de
+	 * adicionar verificações manuais em cada método.
+	 */
 
 	private final ProdutoService produtoService;
 

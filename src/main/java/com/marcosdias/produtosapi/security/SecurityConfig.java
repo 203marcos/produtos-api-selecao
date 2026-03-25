@@ -26,6 +26,23 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+	/*
+	 * Configuração centralizada de segurança:
+	 * 
+	 * 1. @EnableGlobalMethodSecurity(prePostEnabled=true): ativa @PreAuthorize
+	 * 2. SessionCreationPolicy.STATELESS: não cria sessão (JWT stateless)
+	 * 3. Usuario admin hardcoded em InMemoryUserDetailsManager
+	 * 4. BCryptPasswordEncoder: hash seguro de senhas
+	 * 5. JwtAuthenticationFilter adicionado antes de UsernamePasswordAuthenticationFilter
+	 * 6. CORS: permite requisições cross-origin (importante para frontend SPA)
+	 * 7. Handlers customizados para 401 (Unauthorized) e 403 (Forbidden)
+	 * 
+	 * Paths públicos (sem autenticação):
+	 * - /auth/**        (login)
+	 * - /v3/api-docs/** (OpenAPI)
+	 * - /swagger-ui/**  (Swagger UI)
+	 * - /h2-console/**  (banco de dados)
+	 */
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final ApiAuthenticationEntryPoint authenticationEntryPoint;
