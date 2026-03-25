@@ -5,27 +5,26 @@ import javax.validation.constraints.NotBlank;
 
 public class AuthLoginRequestDTO {
 
-    @NotBlank(message = "Email e obrigatorio")
-    @Email(message = "Email invalido")
-    private String email;
+	@NotBlank(message = "Email e obrigatorio")
+	@Email(message = "Email invalido")
+	private String email;
 
-    @NotBlank(message = "Senha e obrigatoria")
-    private String senha;
+	@NotBlank(message = "Senha e obrigatoria")
+	private String senha;
 
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getSenha() {
-        return senha;
-    }
+	public String getSenha() {
+		return senha;
+	}
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 }
-

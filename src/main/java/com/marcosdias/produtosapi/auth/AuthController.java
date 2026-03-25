@@ -19,25 +19,23 @@ import javax.validation.Valid;
 @Validated
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenService jwtTokenService;
+	private final AuthenticationManager authenticationManager;
+	private final JwtTokenService jwtTokenService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtTokenService jwtTokenService) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenService = jwtTokenService;
-    }
+	public AuthController(AuthenticationManager authenticationManager, JwtTokenService jwtTokenService) {
+		this.authenticationManager = authenticationManager;
+		this.jwtTokenService = jwtTokenService;
+	}
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthLoginResponseDTO> login(@Valid @RequestBody AuthLoginRequestDTO request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha())
-            );
-            String token = jwtTokenService.gerarToken(authentication.getName());
-            return ResponseEntity.ok(new AuthLoginResponseDTO(token));
-        } catch (BadCredentialsException ex) {
-            throw new BadCredentialsException("Email ou senha invalidos");
-        }
-    }
+	@PostMapping("/login")
+	public ResponseEntity<AuthLoginResponseDTO> login(@Valid @RequestBody AuthLoginRequestDTO request) {
+		try {
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha()));
+			String token = jwtTokenService.gerarToken(authentication.getName());
+			return ResponseEntity.ok(new AuthLoginResponseDTO(token));
+		} catch (BadCredentialsException ex) {
+			throw new BadCredentialsException("Email ou senha invalidos");
+		}
+	}
 }
-
