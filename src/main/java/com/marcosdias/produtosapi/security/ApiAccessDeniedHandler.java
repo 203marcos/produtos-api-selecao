@@ -16,25 +16,23 @@ import java.io.IOException;
 @Component
 public class ApiAccessDeniedHandler implements AccessDeniedHandler {
 
-    private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-    public ApiAccessDeniedHandler(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+	public ApiAccessDeniedHandler(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
 
-    @Override
-    public void handle(HttpServletRequest request,
-                       HttpServletResponse response,
-                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        ApiErrorResponse errorResponse = new ApiErrorResponse();
-        errorResponse.setStatus(HttpStatus.FORBIDDEN.value());
-        errorResponse.setErro(HttpStatus.FORBIDDEN.getReasonPhrase());
-        errorResponse.setMensagem("Acesso negado");
-        errorResponse.setPath(request.getRequestURI());
+	@Override
+	public void handle(HttpServletRequest request, HttpServletResponse response,
+			AccessDeniedException accessDeniedException) throws IOException, ServletException {
+		ApiErrorResponse errorResponse = new ApiErrorResponse();
+		errorResponse.setStatus(HttpStatus.FORBIDDEN.value());
+		errorResponse.setErro(HttpStatus.FORBIDDEN.getReasonPhrase());
+		errorResponse.setMensagem("Acesso negado");
+		errorResponse.setPath(request.getRequestURI());
 
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        objectMapper.writeValue(response.getWriter(), errorResponse);
-    }
+		response.setStatus(HttpStatus.FORBIDDEN.value());
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		objectMapper.writeValue(response.getWriter(), errorResponse);
+	}
 }
-

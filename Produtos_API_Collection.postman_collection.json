@@ -1,0 +1,637 @@
+{
+  "info": {
+    "_postman_id": "produtos-api-collection",
+    "name": "Produtos API - Spring Boot",
+    "description": "Coleção completa para testar a API REST de Produtos com autenticação JWT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "123456"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login - Gerar Token JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 200",
+                  "pm.test('Status code é 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Extrai o token da resposta",
+                  "var jsonResponse = pm.response.json();",
+                  "pm.test('Token JWT foi retornado', function () {",
+                  "    pm.expect(jsonResponse).to.have.property('token');",
+                  "});",
+                  "",
+                  "// Armazena o token na variável de coleção para usar em outras requisições",
+                  "if (jsonResponse.token) {",
+                  "    pm.collectionVariables.set('jwt_token', jsonResponse.token);",
+                  "    console.log('Token armazenado: ' + jsonResponse.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@exemplo.com\",\n  \"senha\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Credenciais Inválidas (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 401",
+                  "pm.test('Status code é 401 (Unauthorized)', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "// Verifica se a resposta tem a estrutura de erro",
+                  "var jsonResponse = pm.response.json();",
+                  "pm.test('Resposta de erro tem campo mensagem', function () {",
+                  "    pm.expect(jsonResponse).to.have.property('mensagem');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@exemplo.com\",\n  \"senha\": \"senhaErrada\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Produtos - CRUD",
+      "item": [
+        {
+          "name": "Criar Produto",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Gera um timestamp para usar no nome do produto",
+                  "var timestamp = new Date().getTime();",
+                  "pm.environment.set('produto_timestamp', timestamp);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 201 (Created)",
+                  "pm.test('Status code é 201 (Created)', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// Extrai o ID do produto criado",
+                  "var jsonResponse = pm.response.json();",
+                  "pm.test('Produto criado tem ID', function () {",
+                  "    pm.expect(jsonResponse).to.have.property('id');",
+                  "});",
+                  "",
+                  "// Armazena o ID para usar em requisições subsequentes",
+                  "if (jsonResponse.id) {",
+                  "    pm.collectionVariables.set('produto_id', jsonResponse.id);",
+                  "    console.log('Produto ID armazenado: ' + jsonResponse.id);",
+                  "}",
+                  "",
+                  "// Verifica os campos da resposta",
+                  "pm.test('Produto tem nome, preço, descrição e categoria', function () {",
+                  "    pm.expect(jsonResponse).to.have.property('nome');",
+                  "    pm.expect(jsonResponse).to.have.property('preco');",
+                  "    pm.expect(jsonResponse).to.have.property('descricao');",
+                  "    pm.expect(jsonResponse).to.have.property('categoria');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Notebook Dell {{produto_timestamp}}\",\n  \"preco\": 3500.00,\n  \"descricao\": \"Notebook com processador i7 e 16GB de RAM\",\n  \"categoria\": \"Eletrônicos\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos os Produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 200",
+                  "pm.test('Status code é 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Verifica se a resposta é um array",
+                  "var jsonResponse = pm.response.json();",
+                  "pm.test('Resposta é uma lista', function () {",
+                  "    pm.expect(jsonResponse).to.be.an('array');",
+                  "});",
+                  "",
+                  "// Verifica se pelo menos um produto foi retornado",
+                  "pm.test('Lista contém pelo menos um produto', function () {",
+                  "    pm.expect(jsonResponse.length).to.be.greaterThan(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Produto por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 200",
+                  "pm.test('Status code é 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Extrai e verifica os dados do produto",
+                  "var jsonResponse = pm.response.json();",
+                  "pm.test('Produto tem os campos esperados', function () {",
+                  "    pm.expect(jsonResponse).to.have.property('id');",
+                  "    pm.expect(jsonResponse).to.have.property('nome');",
+                  "    pm.expect(jsonResponse).to.have.property('preco');",
+                  "    pm.expect(jsonResponse).to.have.property('descricao');",
+                  "    pm.expect(jsonResponse).to.have.property('categoria');",
+                  "});",
+                  "",
+                  "// Verifica se o ID retornado corresponde ao ID requisitado",
+                  "pm.test('ID do produto corresponde à requisição', function () {",
+                  "    pm.expect(jsonResponse.id).to.equal(parseInt(pm.collectionVariables.get('produto_id')));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/produtos/{{produto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "produtos",
+                "{{produto_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Produto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 200",
+                  "pm.test('Status code é 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Verifica se os dados foram atualizados",
+                  "var jsonResponse = pm.response.json();",
+                  "pm.test('Produto foi atualizado corretamente', function () {",
+                  "    pm.expect(jsonResponse.nome).to.include('Atualizado');",
+                  "    pm.expect(jsonResponse.preco).to.equal(4500.00);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Notebook Dell - Atualizado\",\n  \"preco\": 4500.00,\n  \"descricao\": \"Notebook atualizado com processador i9 e 32GB de RAM\",\n  \"categoria\": \"Eletrônicos Premium\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/produtos/{{produto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "produtos",
+                "{{produto_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Produto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 204 (No Content)",
+                  "pm.test('Status code é 204 (No Content)', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/produtos/{{produto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "produtos",
+                "{{produto_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Produto Inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 404",
+                  "pm.test('Status code é 404 (Not Found)', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "// Verifica se a resposta tem a estrutura de erro",
+                  "var jsonResponse = pm.response.json();",
+                  "pm.test('Resposta de erro tem campos esperados', function () {",
+                  "    pm.expect(jsonResponse).to.have.property('status');",
+                  "    pm.expect(jsonResponse).to.have.property('erro');",
+                  "    pm.expect(jsonResponse).to.have.property('mensagem');",
+                  "    pm.expect(jsonResponse.status).to.equal(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/produtos/99999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "produtos",
+                "99999"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Segurança - Testes de Erro",
+      "item": [
+        {
+          "name": "Acessar Sem Token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 401",
+                  "pm.test('Status code é 401 (Unauthorized)', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "// Verifica a estrutura da resposta de erro",
+                  "var jsonResponse = pm.response.json();",
+                  "pm.test('Resposta de erro tem campo mensagem', function () {",
+                  "    pm.expect(jsonResponse).to.have.property('mensagem');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Acessar com Token Inválido (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 401",
+                  "pm.test('Status code é 401 (Unauthorized)', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer token_invalido_123456789"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Produto Sem Token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Verifica se a resposta tem status 401",
+                  "pm.test('Status code é 401 (Unauthorized)', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Teste\",\n  \"preco\": 100.00,\n  \"descricao\": \"Teste\",\n  \"categoria\": \"Teste\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/produtos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Documentação e Saúde",
+      "item": [
+        {
+          "name": "Swagger UI",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/swagger-ui.html",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "swagger-ui.html"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "OpenAPI JSON",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v3/api-docs",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v3",
+                "api-docs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "H2 Console",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/h2-console",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "h2-console"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "produto_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "produto_timestamp",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
+
