@@ -31,6 +31,13 @@ public class ProdutoController {
 	 * 
 	 * Dessa forma, a segurança é garantida de forma declarativa, sem necessidade de
 	 * adicionar verificações manuais em cada método.
+	 *
+	 * Exemplos rapidos (curl):
+	 * - Criar:   curl -X POST http://localhost:8080/api/produtos -H "Authorization: Bearer SEU_TOKEN" -H "Content-Type: application/json" -d "{\"nome\":\"Mouse\",\"preco\":99.9,\"descricao\":\"Mouse gamer\",\"categoria\":\"Perifericos\"}"
+	 * - Listar:  curl -X GET http://localhost:8080/api/produtos -H "Authorization: Bearer SEU_TOKEN"
+	 * - Buscar:  curl -X GET http://localhost:8080/api/produtos/1 -H "Authorization: Bearer SEU_TOKEN"
+	 * - Atualizar: curl -X PUT http://localhost:8080/api/produtos/1 -H "Authorization: Bearer SEU_TOKEN" -H "Content-Type: application/json" -d "{\"nome\":\"Mouse Pro\",\"preco\":129.9,\"descricao\":\"Mouse gamer RGB\",\"categoria\":\"Perifericos\"}"
+	 * - Deletar: curl -X DELETE http://localhost:8080/api/produtos/1 -H "Authorization: Bearer SEU_TOKEN"
 	 */
 
 	private final ProdutoService produtoService;
