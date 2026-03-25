@@ -1,8 +1,8 @@
-package com.marcosdias.produtosapi;
+package com.marcosdias.produtosapi.security;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marcosdias.produtosapi.auth.AuthLoginRequestDTO;
+import com.marcosdias.produtosapi.auth.dto.AuthLoginRequestDTO;
 import com.marcosdias.produtosapi.produto.dto.ProdutoRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,3 +87,4 @@ class ProdutoControllerSecurityIntegrationTest {
 		return json.get("token").asText();
 	}
 }
+

@@ -1,4 +1,4 @@
-package com.marcosdias.produtosapi.auth;
+package com.marcosdias.produtosapi.auth.dto;
 
 public class AuthLoginResponseDTO {
 
@@ -26,3 +26,4 @@ public class AuthLoginResponseDTO {
 		this.tipo = tipo;
 	}
 }
+
