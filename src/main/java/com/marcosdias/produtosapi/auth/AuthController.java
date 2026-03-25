@@ -29,6 +29,10 @@ public class AuthController {
 		this.jwtTokenService = jwtTokenService;
 	}
 
+	/**
+	 * Exemplo rapido (curl):
+	 * curl -X POST http://localhost:8080/auth/login -H "Content-Type: application/json" -d "{\"email\":\"admin@exemplo.com\",\"senha\":\"admin123\"}"
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<AuthLoginResponseDTO> login(@Valid @RequestBody AuthLoginRequestDTO request) {
 		try {
